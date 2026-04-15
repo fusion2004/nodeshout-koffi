@@ -10,8 +10,6 @@ Original libshout docs: http://www.aelius.com/njh/libshout-doc/libshout.html (a 
 
 ## Node version compability
 
-Since this project heavily depends on [ffi-napi](https://github.com/node-ffi-napi/node-ffi-napi) project, there can be compability issues.
-
 My tests for the current version (2.0.0):
 
 | node | npm | result |
