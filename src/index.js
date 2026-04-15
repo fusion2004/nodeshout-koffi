@@ -29,12 +29,11 @@ nodeshout.shutdown = function() {
  * @return {string}
  */
 nodeshout.getVersion = function() {
-    // Dummy buffers
-    const buff1 = Buffer.alloc(100);
-    const buff2 = Buffer.alloc(100);
-    const buff3 = Buffer.alloc(100);
+    const major = [0];
+    const minor = [0];
+    const patch = [0];
 
-    return libshout.shout_version(buff1, buff2, buff3);
+    return libshout.shout_version(major, minor, patch);
 };
 
 
