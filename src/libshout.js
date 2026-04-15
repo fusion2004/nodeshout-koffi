@@ -1,11 +1,29 @@
 const koffi = require('koffi');
 
-// Define opaque types
-const shout_t = koffi.opaque('shout_t');
-const shout_metadata_t = koffi.opaque('shout_metadata_t');
+// Define opaque types (use resolve to avoid duplicate registration errors)
+function resolveOrCreate(name) {
+    try { return koffi.resolve(name); } catch (e) { return koffi.opaque(name); }
+}
+const shout_t = resolveOrCreate('shout_t');
+const shout_metadata_t = resolveOrCreate('shout_metadata_t');
 
 // Load the shared library
-const lib = koffi.load('libshout');
+function loadLibshout() {
+    const candidates = [
+        'libshout',                              // Linux, or macOS with DYLD_LIBRARY_PATH
+        '/opt/homebrew/lib/libshout.dylib',      // macOS Apple Silicon (Homebrew)
+        '/usr/local/lib/libshout.dylib',         // macOS Intel (Homebrew)
+    ];
+    for (const candidate of candidates) {
+        try { return koffi.load(candidate); } catch (e) { /* try next */ }
+    }
+    throw new Error(
+        'Could not find libshout. Install it with:\n' +
+        '  macOS:         brew install libshout\n' +
+        '  Debian/Ubuntu: apt-get install libshout3-dev'
+    );
+}
+const lib = loadLibshout();
 
 // Declare all function bindings
 module.exports = {
