@@ -10,7 +10,9 @@ const shout_metadata_t = resolveOrCreate('shout_metadata_t');
 // Load the shared library
 function loadLibshout() {
     const candidates = [
-        'libshout',                              // Linux, or macOS with DYLD_LIBRARY_PATH
+        'libshout.so',                           // Linux with -dev symlink
+        'libshout.so.3',                         // Linux runtime (libshout3)
+        'libshout.dylib',                        // macOS with DYLD_LIBRARY_PATH
         '/opt/homebrew/lib/libshout.dylib',      // macOS Apple Silicon (Homebrew)
         '/usr/local/lib/libshout.dylib',         // macOS Intel (Homebrew)
     ];
