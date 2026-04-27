@@ -51,6 +51,10 @@ module.exports = {
     shout_set_port: lib.func('int shout_set_port(shout_t *self, uint16_t port)'),
     shout_get_port: lib.func('uint16_t shout_get_port(shout_t *self)'),
 
+    // User
+    shout_set_user: lib.func('int shout_set_user(shout_t *self, str user)'),
+    shout_get_user: lib.func('str shout_get_user(shout_t *self)'),
+
     // Password
     shout_set_password: lib.func('int shout_set_password(shout_t *self, str password)'),
     shout_get_password: lib.func('str shout_get_password(shout_t *self)'),
@@ -59,33 +63,31 @@ module.exports = {
     shout_set_mount: lib.func('int shout_set_mount(shout_t *self, str mount)'),
     shout_get_mount: lib.func('str shout_get_mount(shout_t *self)'),
 
-    // Name
-    shout_set_name: lib.func('int shout_set_name(shout_t *self, str name)'),
-    shout_get_name: lib.func('str shout_get_name(shout_t *self)'),
-
-    // URL
-    shout_set_url: lib.func('int shout_set_url(shout_t *self, str url)'),
-    shout_get_url: lib.func('str shout_get_url(shout_t *self)'),
-
-    // Genre
-    shout_set_genre: lib.func('int shout_set_genre(shout_t *self, str genre)'),
-    shout_get_genre: lib.func('str shout_get_genre(shout_t *self)'),
-
-    // User
-    shout_set_user: lib.func('int shout_set_user(shout_t *self, str user)'),
-    shout_get_user: lib.func('str shout_get_user(shout_t *self)'),
-
     // Agent
     shout_set_agent: lib.func('int shout_set_agent(shout_t *self, str agent)'),
     shout_get_agent: lib.func('str shout_get_agent(shout_t *self)'),
 
-    // Description
-    shout_set_description: lib.func('int shout_set_description(shout_t *self, str description)'),
-    shout_get_description: lib.func('str shout_get_description(shout_t *self)'),
+    // TLS
+    shout_set_tls: lib.func('int shout_set_tls(shout_t *self, int mode)'),
+    shout_get_tls: lib.func('int shout_get_tls(shout_t *self)'),
 
-    // Dumpfile
-    shout_set_dumpfile: lib.func('int shout_set_dumpfile(shout_t *self, str dumpfile)'),
-    shout_get_dumpfile: lib.func('str shout_get_dumpfile(shout_t *self)'),
+    // CA directory / file
+    shout_set_ca_directory: lib.func('int shout_set_ca_directory(shout_t *self, str directory)'),
+    shout_get_ca_directory: lib.func('str shout_get_ca_directory(shout_t *self)'),
+    shout_set_ca_file: lib.func('int shout_set_ca_file(shout_t *self, str file)'),
+    shout_get_ca_file: lib.func('str shout_get_ca_file(shout_t *self)'),
+
+    // Allowed ciphers
+    shout_set_allowed_ciphers: lib.func('int shout_set_allowed_ciphers(shout_t *self, str ciphers)'),
+    shout_get_allowed_ciphers: lib.func('str shout_get_allowed_ciphers(shout_t *self)'),
+
+    // Client certificate
+    shout_set_client_certificate: lib.func('int shout_set_client_certificate(shout_t *self, str certificate)'),
+    shout_get_client_certificate: lib.func('str shout_get_client_certificate(shout_t *self)'),
+
+    // Generic metadata (replaces obsolete name/url/genre/description setters)
+    shout_set_meta: lib.func('int shout_set_meta(shout_t *self, str name, str value)'),
+    shout_get_meta: lib.func('str shout_get_meta(shout_t *self, str name)'),
 
     // Audio info
     shout_set_audio_info: lib.func('int shout_set_audio_info(shout_t *self, str key, str value)'),
@@ -95,9 +97,13 @@ module.exports = {
     shout_set_public: lib.func('int shout_set_public(shout_t *self, uint32_t is_public)'),
     shout_get_public: lib.func('uint32_t shout_get_public(shout_t *self)'),
 
-    // Format
-    shout_set_format: lib.func('int shout_set_format(shout_t *self, uint32_t format)'),
-    shout_get_format: lib.func('uint32_t shout_get_format(shout_t *self)'),
+    // Content language
+    shout_set_content_language: lib.func('int shout_set_content_language(shout_t *self, str content_language)'),
+    shout_get_content_language: lib.func('str shout_get_content_language(shout_t *self)'),
+
+    // Content format (replaces obsolete shout_set_format)
+    shout_set_content_format: lib.func('int shout_set_content_format(shout_t *self, uint32_t format, uint32_t usage, str codecs)'),
+    shout_get_content_format: lib.func('int shout_get_content_format(shout_t *self, _Out_ uint32_t *format, _Out_ uint32_t *usage, _Out_ str *codecs)'),
 
     // Protocol
     shout_set_protocol: lib.func('int shout_set_protocol(shout_t *self, uint32_t protocol)'),
@@ -120,9 +126,38 @@ module.exports = {
     shout_sync: lib.func('void shout_sync(shout_t *self)'),
     shout_delay: lib.func('int shout_delay(shout_t *self)'),
 
-    // Metadata
-    shout_set_metadata: lib.func('int shout_set_metadata(shout_t *self, shout_metadata_t *metadata)'),
+    // MP3/AAC metadata
+    shout_set_metadata_utf8: lib.func('int shout_set_metadata_utf8(shout_t *self, shout_metadata_t *metadata)'),
     shout_metadata_new: lib.func('shout_metadata_t *shout_metadata_new()'),
     shout_metadata_free: lib.func('void shout_metadata_free(shout_metadata_t *metadata)'),
     shout_metadata_add: lib.func('int shout_metadata_add(shout_metadata_t *metadata, str key, str value)'),
+
+    // ----- Obsolete (kept for backward compatibility; do not use in new code) -----
+
+    // Use shout_set_meta(SHOUT_META_NAME, ...) instead.
+    shout_set_name: lib.func('int shout_set_name(shout_t *self, str name)'),
+    shout_get_name: lib.func('str shout_get_name(shout_t *self)'),
+
+    // Use shout_set_meta(SHOUT_META_URL, ...) instead.
+    shout_set_url: lib.func('int shout_set_url(shout_t *self, str url)'),
+    shout_get_url: lib.func('str shout_get_url(shout_t *self)'),
+
+    // Use shout_set_meta(SHOUT_META_GENRE, ...) instead.
+    shout_set_genre: lib.func('int shout_set_genre(shout_t *self, str genre)'),
+    shout_get_genre: lib.func('str shout_get_genre(shout_t *self)'),
+
+    // Use shout_set_meta(SHOUT_META_DESCRIPTION, ...) instead.
+    shout_set_description: lib.func('int shout_set_description(shout_t *self, str description)'),
+    shout_get_description: lib.func('str shout_get_description(shout_t *self)'),
+
+    // Only useful with the deprecated SHOUT_PROTOCOL_XAUDIOCAST.
+    shout_set_dumpfile: lib.func('int shout_set_dumpfile(shout_t *self, str dumpfile)'),
+    shout_get_dumpfile: lib.func('str shout_get_dumpfile(shout_t *self)'),
+
+    // Use shout_set_content_format() instead.
+    shout_set_format: lib.func('int shout_set_format(shout_t *self, uint32_t format)'),
+    shout_get_format: lib.func('uint32_t shout_get_format(shout_t *self)'),
+
+    // Use shout_set_metadata_utf8() instead.
+    shout_set_metadata: lib.func('int shout_set_metadata(shout_t *self, shout_metadata_t *metadata)'),
 };

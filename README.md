@@ -6,26 +6,11 @@ Native libshout bindings for node.js.
 
 More detail: http://icecast.org
 
-Original libshout docs: http://www.aelius.com/njh/libshout-doc/libshout.html (a copy of this page can be also found at `/docs/libshout2.html`)
-
-## Node version compability
-
-My tests for the current version (2.0.0):
-
-| node | npm | result |
-| -- | -- | -- |
-| v18.13.0 | 8.19.3 | :white_check_mark: |
-| 16.16.0 | 8.11.0 | :white_check_mark: |
-| 14.20.1 | 6.14.17 | :white_check_mark: (`python` required to install) |
-| 12.22.12 | 6.14.16 | :white_check_mark: (`python` required to install) |
-| 11.15.0 | 6.7.0 | :x: Use version `0.1.3` |
-| 10.16.0 | 6.9.0 | :x: Use version `0.1.3` |
-| 9.11.1 | 5.6.0 | :x: Use version `0.1.3` |
-| 8.11.4 | 5.6.0 | :x: Use version `0.1.3` |
+Tracks libshout 2.4.x. Upstream API reference: https://gitlab.xiph.org/xiph/icecast-libshout/-/blob/master/doc/libshout.xml.
 
 ## Usage
 
-You have to install libshout library before using nodeshout. If you work on OS X, you can install via homebrew.
+You have to install libshout library before using nodeshout. If you work on macOS, you can install via homebrew.
 
 ```
 brew install libshout
@@ -52,22 +37,30 @@ shout.setPort(8000);
 shout.setUser('source');
 shout.setPassword('password');
 shout.setMount('mount');
-shout.setFormat(1); // 0=ogg, 1=mp3
-shout.setAudioInfo('bitrate', '192');
-shout.setAudioInfo('samplerate', '44100');
-shout.setAudioInfo('channels', '2');
+shout.setContentFormat(nodeshout.Formats.MP3, nodeshout.Usages.AUDIO, null);
+shout.setAudioInfo(nodeshout.AudioInfoKeys.BITRATE, '192');
+shout.setAudioInfo(nodeshout.AudioInfoKeys.SAMPLERATE, '44100');
+shout.setAudioInfo(nodeshout.AudioInfoKeys.CHANNELS, '2');
 ```
 
-Open the connection.
+Open the connection — and check the return code. Every method documented as "Callers should check this" returns `nodeshout.ErrorTypes.SUCCESS` (`0`) on success or a negative `ErrorTypes` value on failure. On failure, `shout.getError()` returns a human-readable message.
 
 ```js
-shout.open();
+const status = shout.open();
+if (status !== nodeshout.ErrorTypes.SUCCESS) {
+    console.error('shout_open failed:', shout.getError());
+    process.exit(1);
+}
 ```
 
-If connection is successful, above function will return `nodeshout.ErrorTypes.SUCCESS` which is integer `0`. After successful connection, you can send audio file chunks via `shout.send` method.
+After successful connection, send audio file chunks via `shout.send` (also checked):
 
 ```js
-shout.send(buffer, bytesRead);
+const sendStatus = shout.send(buffer, bytesRead);
+if (sendStatus !== nodeshout.ErrorTypes.SUCCESS) {
+    console.error('shout_send failed:', shout.getError());
+    break;
+}
 ```
 
 For the synchronization, there is 2 method provided. First one is `shout.sync()` method, this method blocks current thread. Second one is `shout.delay()` method, this method returns how many milliseconds you should wait to send next audio chunk.
@@ -78,18 +71,37 @@ For the synchronization, there is 2 method provided. First one is `shout.sync()`
 
 Check the `/demos` folder.
 
-## Metadata
+## Constants
 
-```js
-// Create a metadata instance
-const metadata = nodeshout.createMetadata();
+All libshout enums are exposed as grouped objects on the module:
 
-// Set currently playing song.
-metadata.add('song', 'Led Zeppelin - I can\'t quit you baby');
+| Group | Purpose |
+| -- | -- |
+| `nodeshout.ErrorTypes` | `SHOUTERR_*` codes returned by every checked method. |
+| `nodeshout.Formats` | `SHOUT_FORMAT_*` — pass to `setContentFormat()`. |
+| `nodeshout.Usages` | `SHOUT_USAGE_*` — bitwise OR for `setContentFormat()`. |
+| `nodeshout.Protocols` | `SHOUT_PROTOCOL_*` — pass to `setProtocol()`. |
+| `nodeshout.TlsModes` | `SHOUT_TLS_*` — pass to `setTls()`. |
+| `nodeshout.Blocking` | `SHOUT_BLOCKING_*` — pass to `setNonblocking()`. |
+| `nodeshout.AudioInfoKeys` | `SHOUT_AI_*` — keys for `setAudioInfo()` / `getAudioInfo()`. |
+| `nodeshout.MetaKeys` | `SHOUT_META_*` — keys for `setMeta()` / `getMeta()`. |
 
-// Apply metadata to shout
-shout.setMetadata(metadata);
-```
+## Deprecated APIs
+
+These wrappers still work but are marked `@deprecated` because the underlying libshout
+functions are obsolete. New code should use the listed replacements:
+
+| Deprecated | Replacement |
+| -- | -- |
+| `setName(s)` / `getName()` | `setMeta(MetaKeys.NAME, s)` / `getMeta(MetaKeys.NAME)` |
+| `setUrl(s)` / `getUrl()` | `setMeta(MetaKeys.URL, s)` / `getMeta(MetaKeys.URL)` |
+| `setGenre(s)` / `getGenre()` | `setMeta(MetaKeys.GENRE, s)` / `getMeta(MetaKeys.GENRE)` |
+| `setDescription(s)` / `getDescription()` | `setMeta(MetaKeys.DESCRIPTION, s)` / `getMeta(MetaKeys.DESCRIPTION)` |
+| `setFormat(fmt)` / `getFormat()` | `setContentFormat(fmt, usage, codecs)` / `getContentFormat()` |
+| `setMetadata(m)` | `setMetadataUtf8(m)` |
+| `setDumpfile(p)` / `getDumpfile()` | (no replacement — only useful with the deprecated `Protocols.XAUDIOCAST`) |
+
+The `Formats.WEBMAUDIO` and `Protocols.XAUDIOCAST` constants are also deprecated.
 
 ## Developing
 Below is a short guild to the development in this repository
@@ -100,14 +112,3 @@ Below is a short guild to the development in this repository
 - Install dependencies: `npm i`
 - Start icecast server
 - Run `npm test` and see it's working
-
-### Debuging
-
-#### Libshout install issue
-If you get the below error its likely that the `libshout` dependency is installed incorrectly
-`Error: ENOENT: no such file or directory, open 'libshout.so'`
-
-The install for the libshout dependency on non-mac systems can be a bit annoying. I found it easiest to install it on linux via building from source. https://icecast.org/download/
-If you scroll down to the bottom of that page you can get the `libshout` source download `tar.gz` link.
-
-After downloading the dependency, follow the `INSTALL` instructions for installing it locally. The `libshout` library should be installed to `/usr/local/lib/libshout` (At least it was on Ubuntu based distributions). This file must be passed into the `FFI.Library` function. Either you can pass in the fully qualifed path, or make the `/usr/local/lib/libshout` available to the system to reference without a path name.
