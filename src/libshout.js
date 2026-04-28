@@ -1,67 +1,163 @@
-const FFI = require('ffi-napi');
-const ref = require('ref-napi');
+const koffi = require('koffi');
 
-const void_ptr = ref.refType(ref.types.void);
+// Define opaque types (use resolve to avoid duplicate registration errors)
+function resolveOrCreate(name) {
+    try { return koffi.resolve(name); } catch (e) { return koffi.opaque(name); }
+}
+const shout_t = resolveOrCreate('shout_t');
+const shout_metadata_t = resolveOrCreate('shout_metadata_t');
 
-const shout_t = exports.shout_t = void_ptr;
-const shout_t_ptr = exports.shout_t_ptr = ref.refType(shout_t);
-const shout_metadata_t = exports.shout_metadata_t = void_ptr;
-const shout_metadata_t_ptr = exports.shout_metadata_t_ptr = ref.refType(shout_metadata_t);
+// Load the shared library
+function loadLibshout() {
+    const candidates = [
+        'libshout.so',                           // Linux with -dev symlink
+        'libshout.so.3',                         // Linux runtime (libshout3)
+        'libshout.dylib',                        // macOS with DYLD_LIBRARY_PATH
+        '/opt/homebrew/lib/libshout.dylib',      // macOS Apple Silicon (Homebrew)
+        '/usr/local/lib/libshout.dylib',         // macOS Intel (Homebrew)
+    ];
+    for (const candidate of candidates) {
+        try { return koffi.load(candidate); } catch (e) { /* try next */ }
+    }
+    throw new Error(
+        'Could not find libshout. Install it with:\n' +
+        '  macOS:         brew install libshout\n' +
+        '  Debian/Ubuntu: apt-get install libshout3-dev'
+    );
+}
+const lib = loadLibshout();
 
-module.exports =  FFI.Library('libshout', {
-    shout_init: [ref.types.void, []],
-    shout_shutdown: [ref.types.void, []],
-    shout_version: [ref.types.CString, [
-        ref.refType(ref.types.int32),
-        ref.refType(ref.types.int32),
-        ref.refType(ref.types.int32),
-    ]],
-    shout_new: [shout_t, []],
-    shout_free: [ref.types.void, [shout_t_ptr]],
-    shout_get_error: [ref.types.CString, [shout_t_ptr]],
-    shout_get_errno: [ref.types.int32, [shout_t_ptr]],
-    shout_get_connected: [ref.types.int32, [shout_t_ptr]],
-    shout_set_host: [ref.types.int32, [shout_t_ptr, ref.types.CString]],
-    shout_get_host: [ref.types.CString, [shout_t_ptr]],
-    shout_set_port: [ref.types.int32, [shout_t_ptr, ref.types.ushort]],
-    shout_get_port: [ref.types.ushort, [shout_t_ptr]],
-    shout_set_password: [ref.types.int32, [shout_t_ptr, ref.types.CString]],
-    shout_get_password: [ref.types.CString, [shout_t_ptr]],
-    shout_set_mount: [ref.types.int32, [shout_t_ptr, ref.types.CString]],
-    shout_get_mount: [ref.types.CString, [shout_t_ptr]],
-    shout_set_name: [ref.types.int32, [shout_t_ptr, ref.types.CString]],
-    shout_get_name: [ref.types.CString, [shout_t_ptr]],
-    shout_set_url: [ref.types.int32, [shout_t_ptr, ref.types.CString]],
-    shout_get_url: [ref.types.CString, [shout_t_ptr]],
-    shout_set_genre: [ref.types.int32, [shout_t_ptr, ref.types.CString]],
-    shout_get_genre: [ref.types.CString, [shout_t_ptr]],
-    shout_set_user: [ref.types.int32, [shout_t_ptr, ref.types.CString]],
-    shout_get_user: [ref.types.CString, [shout_t_ptr]],
-    shout_set_agent: [ref.types.int32, [shout_t_ptr, ref.types.CString]],
-    shout_get_agent: [ref.types.CString, [shout_t_ptr]],
-    shout_set_description: [ref.types.int32, [shout_t_ptr, ref.types.CString]],
-    shout_get_description: [ref.types.CString, [shout_t_ptr]],
-    shout_set_dumpfile: [ref.types.int32, [shout_t_ptr, ref.types.CString]],
-    shout_get_dumpfile: [ref.types.CString, [shout_t_ptr]],
-    shout_set_audio_info: [ref.types.int32, [shout_t_ptr, ref.types.CString, ref.types.CString]],
-    shout_get_audio_info: [ref.types.CString, [shout_t_ptr, ref.types.CString]],
-    shout_set_public: [ref.types.int32, [shout_t_ptr, ref.types.uint32]],
-    shout_get_public: [ref.types.uint32, [shout_t_ptr]],
-    shout_set_format: [ref.types.int32, [shout_t_ptr, ref.types.uint32]],
-    shout_get_format: [ref.types.uint32, [shout_t_ptr]],
-    shout_set_protocol: [ref.types.int32, [shout_t_ptr, ref.types.uint32]],
-    shout_get_protocol: [ref.types.uint32, [shout_t_ptr]],
-    shout_set_nonblocking: [ref.types.int32, [shout_t_ptr, ref.types.uint32]],
-    shout_get_nonblocking: [ref.types.uint32, [shout_t_ptr]],
-    shout_open: [ref.types.int32, [shout_t_ptr]],
-    shout_close: [ref.types.int32, [shout_t_ptr]],
-    shout_send: [ref.types.int32, [shout_t_ptr, ref.refType(ref.types.uchar), ref.types.int32]],
-    shout_send_raw: [ref.types.int32, [shout_t_ptr, ref.refType(ref.types.uchar),  ref.types.int32]],
-    shout_queuelen: [ref.types.int32, [shout_t_ptr]],
-    shout_sync: [ref.types.void, [shout_t_ptr]],
-    shout_delay: [ref.types.int32, [shout_t_ptr]],
-    shout_set_metadata: [ref.types.int32, [shout_t_ptr, shout_metadata_t]],
-    shout_metadata_new: [shout_metadata_t_ptr, []],
-    shout_metadata_free: [ref.types.void, [shout_metadata_t_ptr]],
-    shout_metadata_add: [ref.types.int32, [shout_metadata_t_ptr, ref.types.CString, ref.types.CString]],
-});
+// Declare all function bindings
+module.exports = {
+    // Lifecycle
+    shout_init: lib.func('void shout_init()'),
+    shout_shutdown: lib.func('void shout_shutdown()'),
+    shout_version: lib.func('str shout_version(_Out_ int *major, _Out_ int *minor, _Out_ int *patch)'),
+
+    // Instance management
+    shout_new: lib.func('shout_t *shout_new()'),
+    shout_free: lib.func('void shout_free(shout_t *self)'),
+
+    // Error handling
+    shout_get_error: lib.func('str shout_get_error(shout_t *self)'),
+    shout_get_errno: lib.func('int shout_get_errno(shout_t *self)'),
+    shout_get_connected: lib.func('int shout_get_connected(shout_t *self)'),
+
+    // Host
+    shout_set_host: lib.func('int shout_set_host(shout_t *self, str host)'),
+    shout_get_host: lib.func('str shout_get_host(shout_t *self)'),
+
+    // Port
+    shout_set_port: lib.func('int shout_set_port(shout_t *self, uint16_t port)'),
+    shout_get_port: lib.func('uint16_t shout_get_port(shout_t *self)'),
+
+    // User
+    shout_set_user: lib.func('int shout_set_user(shout_t *self, str user)'),
+    shout_get_user: lib.func('str shout_get_user(shout_t *self)'),
+
+    // Password
+    shout_set_password: lib.func('int shout_set_password(shout_t *self, str password)'),
+    shout_get_password: lib.func('str shout_get_password(shout_t *self)'),
+
+    // Mount
+    shout_set_mount: lib.func('int shout_set_mount(shout_t *self, str mount)'),
+    shout_get_mount: lib.func('str shout_get_mount(shout_t *self)'),
+
+    // Agent
+    shout_set_agent: lib.func('int shout_set_agent(shout_t *self, str agent)'),
+    shout_get_agent: lib.func('str shout_get_agent(shout_t *self)'),
+
+    // TLS
+    shout_set_tls: lib.func('int shout_set_tls(shout_t *self, int mode)'),
+    shout_get_tls: lib.func('int shout_get_tls(shout_t *self)'),
+
+    // CA directory / file
+    shout_set_ca_directory: lib.func('int shout_set_ca_directory(shout_t *self, str directory)'),
+    shout_get_ca_directory: lib.func('str shout_get_ca_directory(shout_t *self)'),
+    shout_set_ca_file: lib.func('int shout_set_ca_file(shout_t *self, str file)'),
+    shout_get_ca_file: lib.func('str shout_get_ca_file(shout_t *self)'),
+
+    // Allowed ciphers
+    shout_set_allowed_ciphers: lib.func('int shout_set_allowed_ciphers(shout_t *self, str ciphers)'),
+    shout_get_allowed_ciphers: lib.func('str shout_get_allowed_ciphers(shout_t *self)'),
+
+    // Client certificate
+    shout_set_client_certificate: lib.func('int shout_set_client_certificate(shout_t *self, str certificate)'),
+    shout_get_client_certificate: lib.func('str shout_get_client_certificate(shout_t *self)'),
+
+    // Generic metadata (replaces obsolete name/url/genre/description setters)
+    shout_set_meta: lib.func('int shout_set_meta(shout_t *self, str name, str value)'),
+    shout_get_meta: lib.func('str shout_get_meta(shout_t *self, str name)'),
+
+    // Audio info
+    shout_set_audio_info: lib.func('int shout_set_audio_info(shout_t *self, str key, str value)'),
+    shout_get_audio_info: lib.func('str shout_get_audio_info(shout_t *self, str key)'),
+
+    // Public
+    shout_set_public: lib.func('int shout_set_public(shout_t *self, uint32_t is_public)'),
+    shout_get_public: lib.func('uint32_t shout_get_public(shout_t *self)'),
+
+    // Content language
+    shout_set_content_language: lib.func('int shout_set_content_language(shout_t *self, str content_language)'),
+    shout_get_content_language: lib.func('str shout_get_content_language(shout_t *self)'),
+
+    // Content format (replaces obsolete shout_set_format)
+    shout_set_content_format: lib.func('int shout_set_content_format(shout_t *self, uint32_t format, uint32_t usage, str codecs)'),
+    shout_get_content_format: lib.func('int shout_get_content_format(shout_t *self, _Out_ uint32_t *format, _Out_ uint32_t *usage, _Out_ str *codecs)'),
+
+    // Protocol
+    shout_set_protocol: lib.func('int shout_set_protocol(shout_t *self, uint32_t protocol)'),
+    shout_get_protocol: lib.func('uint32_t shout_get_protocol(shout_t *self)'),
+
+    // Nonblocking
+    shout_set_nonblocking: lib.func('int shout_set_nonblocking(shout_t *self, uint32_t nonblocking)'),
+    shout_get_nonblocking: lib.func('uint32_t shout_get_nonblocking(shout_t *self)'),
+
+    // Connection
+    shout_open: lib.func('int shout_open(shout_t *self)'),
+    shout_close: lib.func('int shout_close(shout_t *self)'),
+
+    // Send data
+    shout_send: lib.func('int shout_send(shout_t *self, const uint8_t *data, uintptr_t len)'),
+    shout_send_raw: lib.func('intptr_t shout_send_raw(shout_t *self, const uint8_t *data, uintptr_t len)'),
+
+    // Timing
+    shout_queuelen: lib.func('intptr_t shout_queuelen(shout_t *self)'),
+    shout_sync: lib.func('void shout_sync(shout_t *self)'),
+    shout_delay: lib.func('int shout_delay(shout_t *self)'),
+
+    // MP3/AAC metadata
+    shout_set_metadata_utf8: lib.func('int shout_set_metadata_utf8(shout_t *self, shout_metadata_t *metadata)'),
+    shout_metadata_new: lib.func('shout_metadata_t *shout_metadata_new()'),
+    shout_metadata_free: lib.func('void shout_metadata_free(shout_metadata_t *metadata)'),
+    shout_metadata_add: lib.func('int shout_metadata_add(shout_metadata_t *metadata, str key, str value)'),
+
+    // ----- Obsolete (kept for backward compatibility; do not use in new code) -----
+
+    // Use shout_set_meta(SHOUT_META_NAME, ...) instead.
+    shout_set_name: lib.func('int shout_set_name(shout_t *self, str name)'),
+    shout_get_name: lib.func('str shout_get_name(shout_t *self)'),
+
+    // Use shout_set_meta(SHOUT_META_URL, ...) instead.
+    shout_set_url: lib.func('int shout_set_url(shout_t *self, str url)'),
+    shout_get_url: lib.func('str shout_get_url(shout_t *self)'),
+
+    // Use shout_set_meta(SHOUT_META_GENRE, ...) instead.
+    shout_set_genre: lib.func('int shout_set_genre(shout_t *self, str genre)'),
+    shout_get_genre: lib.func('str shout_get_genre(shout_t *self)'),
+
+    // Use shout_set_meta(SHOUT_META_DESCRIPTION, ...) instead.
+    shout_set_description: lib.func('int shout_set_description(shout_t *self, str description)'),
+    shout_get_description: lib.func('str shout_get_description(shout_t *self)'),
+
+    // Only useful with the deprecated SHOUT_PROTOCOL_XAUDIOCAST.
+    shout_set_dumpfile: lib.func('int shout_set_dumpfile(shout_t *self, str dumpfile)'),
+    shout_get_dumpfile: lib.func('str shout_get_dumpfile(shout_t *self)'),
+
+    // Use shout_set_content_format() instead.
+    shout_set_format: lib.func('int shout_set_format(shout_t *self, uint32_t format)'),
+    shout_get_format: lib.func('uint32_t shout_get_format(shout_t *self)'),
+
+    // Use shout_set_metadata_utf8() instead.
+    shout_set_metadata: lib.func('int shout_set_metadata(shout_t *self, shout_metadata_t *metadata)'),
+};

@@ -14,13 +14,17 @@ async function main() {
     shout.setUser('source');
     shout.setPassword('hackme');
     shout.setMount('test');
-    shout.setFormat(1); // 0=ogg, 1=mp3
-    shout.setAudioInfo('bitrate', '192');
-    shout.setAudioInfo('samplerate', '44100');
-    shout.setAudioInfo('channels', '2');
+    shout.setContentFormat(nodeshout.Formats.MP3, nodeshout.Usages.AUDIO, null);
+    shout.setAudioInfo(nodeshout.AudioInfoKeys.BITRATE, '192');
+    shout.setAudioInfo(nodeshout.AudioInfoKeys.SAMPLERATE, '44100');
+    shout.setAudioInfo(nodeshout.AudioInfoKeys.CHANNELS, '2');
 
-    // Open the instance
-    shout.open();
+    // Open the instance — every checked method returns ErrorTypes.SUCCESS on success,
+    // and shout.getError() yields the human-readable reason on failure.
+    const openStatus = shout.open();
+    if (openStatus !== nodeshout.ErrorTypes.SUCCESS) {
+        throw new Error(`shout_open failed: ${shout.getError()}`);
+    }
 
     // Open mp3 file & prepare reading
     const fileHandle = await fs.open('./music/test.mp3');
@@ -49,7 +53,10 @@ async function main() {
         }
 
         // Send the data
-        shout.send(buf, bytesRead);
+        const sendStatus = shout.send(buf, bytesRead);
+        if (sendStatus !== nodeshout.ErrorTypes.SUCCESS) {
+            throw new Error(`shout_send failed: ${shout.getError()}`);
+        }
 
         // Wait for the next chunk
         // THIS WILL BLOCK THE I/O
