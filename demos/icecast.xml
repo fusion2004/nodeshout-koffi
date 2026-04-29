@@ -11,7 +11,6 @@
     </authentication>
     <listen-socket>
         <port>8000</port>
-        <bind-address>127.0.0.1</bind-address>
     </listen-socket>
     <paths>
         <logdir>/tmp</logdir>
