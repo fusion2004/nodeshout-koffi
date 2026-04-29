@@ -160,7 +160,7 @@ Tooling is pinned via [mise](https://mise.jdx.dev/) and [Yarn Berry](https://yar
 
 - `mise install` — installs node & yarn
 - `yarn install` — installs dependencies (`nodeLinker: node-modules`).
-- `yarn typecheck` — runs `tsc --noEmit`.
+- `mise run lint` — runs `lint:tsc`, `lint:oxlint`, and `lint:fmt` in parallel (or run any individually as `yarn lint:tsc`, etc.).
 - `yarn test` — runs vitest unit tests (no server required).
 - `yarn build` — emits `dist/*.js` and `dist/*.d.ts`.
 - `yarn demos` — runs both demos against a local Icecast (start `icecast -c demos/icecast.xml` first).

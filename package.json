@@ -20,7 +20,9 @@
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "clean": "rm -rf dist",
-    "typecheck": "tsc --noEmit",
+    "lint:tsc": "tsc --noEmit",
+    "lint:oxlint": "oxlint",
+    "lint:fmt": "oxfmt --check",
     "test": "vitest run",
     "test:watch": "vitest",
     "demo:blocking": "tsx demos/01-blocking-io.ts",
@@ -49,6 +51,8 @@
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
+    "oxfmt": "^0.47.0",
+    "oxlint": "^1.62.0",
     "tsx": "^4.21.0",
     "typescript": "^6.0.3",
     "vitest": "^4.1.5"

@@ -1,3 +1,24 @@
 [tools]
 node = "22"
 yarn = "4.14.1"
+
+[tasks.build]
+run = "yarn build"
+
+[tasks."lint:tsc"]
+run = "yarn lint:tsc"
+
+[tasks."lint:oxlint"]
+run = "yarn lint:oxlint"
+
+[tasks."lint:fmt"]
+run = "yarn lint:fmt"
+
+[tasks.lint]
+depends = ["lint:tsc", "lint:oxlint", "lint:fmt"]
+
+[tasks.demos]
+run = "yarn demos"
+
+[tasks.test]
+run = "yarn test"
