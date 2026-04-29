@@ -201,12 +201,7 @@ export const shout_set_content_format = lib.func(
 export const shout_get_content_format = lib.func(
   "int shout_get_content_format(shout_t *self, _Out_ uint32_t *format, _Out_ uint32_t *usage, _Out_ str *codecs)",
 ) as KoffiFunc<
-  (
-    self: ShoutPtr,
-    format: [number],
-    usage: [number],
-    codecs: [string | null],
-  ) => ShoutErrorType
+  (self: ShoutPtr, format: [number], usage: [number], codecs: [string | null]) => ShoutErrorType
 >;
 
 // Protocol
