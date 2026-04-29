@@ -44,7 +44,7 @@ import {
   ShoutFormats,
   ShoutUsages,
   ShoutAudioInfoKeys,
-} from 'nodeshout';
+} from "nodeshout";
 
 // Initialize
 shoutInit();
@@ -53,15 +53,15 @@ shoutInit();
 const shout = createShout();
 
 // Configure it
-shout.setHost('localhost');
+shout.setHost("localhost");
 shout.setPort(8000);
-shout.setUser('source');
-shout.setPassword('password');
-shout.setMount('mount');
+shout.setUser("source");
+shout.setPassword("password");
+shout.setMount("mount");
 shout.setContentFormat(ShoutFormats.MP3, ShoutUsages.AUDIO, null);
-shout.setAudioInfo(ShoutAudioInfoKeys.BITRATE, '192');
-shout.setAudioInfo(ShoutAudioInfoKeys.SAMPLERATE, '44100');
-shout.setAudioInfo(ShoutAudioInfoKeys.CHANNELS, '2');
+shout.setAudioInfo(ShoutAudioInfoKeys.BITRATE, "192");
+shout.setAudioInfo(ShoutAudioInfoKeys.SAMPLERATE, "44100");
+shout.setAudioInfo(ShoutAudioInfoKeys.CHANNELS, "2");
 ```
 
 Open the connection — and check the return code. Every method documented as "Callers should check this" returns `ShoutErrorTypes.SUCCESS` (`0`) on success or a negative `ShoutErrorTypes` value on failure. On failure, `shout.getError()` returns a human-readable message.
@@ -69,7 +69,7 @@ Open the connection — and check the return code. Every method documented as "C
 ```ts
 const status = shout.open();
 if (status !== ShoutErrorTypes.SUCCESS) {
-  console.error('shout_open failed:', shout.getError());
+  console.error("shout_open failed:", shout.getError());
   process.exit(1);
 }
 ```
@@ -79,7 +79,7 @@ After successful connection, send audio file chunks via `shout.send` (also check
 ```ts
 const sendStatus = shout.send(buffer, bytesRead);
 if (sendStatus !== ShoutErrorTypes.SUCCESS) {
-  console.error('shout_send failed:', shout.getError());
+  console.error("shout_send failed:", shout.getError());
 }
 ```
 
@@ -102,30 +102,30 @@ yarn demo:nonblocking
 
 All libshout enums are exposed as named `as const` objects:
 
-| Export | Purpose |
-| -- | -- |
-| `ShoutErrorTypes` | `SHOUTERR_*` codes returned by every checked method. |
-| `ShoutFormats` | `SHOUT_FORMAT_*` — pass to `setContentFormat()`. |
-| `ShoutUsages` | `SHOUT_USAGE_*` — bitwise OR for `setContentFormat()`. |
-| `ShoutProtocols` | `SHOUT_PROTOCOL_*` — pass to `setProtocol()`. |
-| `ShoutTlsModes` | `SHOUT_TLS_*` — pass to `setTls()`. |
-| `ShoutBlocking` | `SHOUT_BLOCKING_*` — pass to `setNonblocking()`. |
+| Export               | Purpose                                                      |
+| -------------------- | ------------------------------------------------------------ |
+| `ShoutErrorTypes`    | `SHOUTERR_*` codes returned by every checked method.         |
+| `ShoutFormats`       | `SHOUT_FORMAT_*` — pass to `setContentFormat()`.             |
+| `ShoutUsages`        | `SHOUT_USAGE_*` — bitwise OR for `setContentFormat()`.       |
+| `ShoutProtocols`     | `SHOUT_PROTOCOL_*` — pass to `setProtocol()`.                |
+| `ShoutTlsModes`      | `SHOUT_TLS_*` — pass to `setTls()`.                          |
+| `ShoutBlocking`      | `SHOUT_BLOCKING_*` — pass to `setNonblocking()`.             |
 | `ShoutAudioInfoKeys` | `SHOUT_AI_*` — keys for `setAudioInfo()` / `getAudioInfo()`. |
-| `ShoutMetaKeys` | `SHOUT_META_*` — keys for `setMeta()` / `getMeta()`. |
+| `ShoutMetaKeys`      | `SHOUT_META_*` — keys for `setMeta()` / `getMeta()`.         |
 
 ## Deprecated APIs
 
 These wrappers still work but are marked `@deprecated` because the underlying libshout functions are obsolete. New code should use the listed replacements:
 
-| Deprecated | Replacement |
-| -- | -- |
-| `setName(s)` / `getName()` | `setMeta(ShoutMetaKeys.NAME, s)` / `getMeta(ShoutMetaKeys.NAME)` |
-| `setUrl(s)` / `getUrl()` | `setMeta(ShoutMetaKeys.URL, s)` / `getMeta(ShoutMetaKeys.URL)` |
-| `setGenre(s)` / `getGenre()` | `setMeta(ShoutMetaKeys.GENRE, s)` / `getMeta(ShoutMetaKeys.GENRE)` |
+| Deprecated                               | Replacement                                                                    |
+| ---------------------------------------- | ------------------------------------------------------------------------------ |
+| `setName(s)` / `getName()`               | `setMeta(ShoutMetaKeys.NAME, s)` / `getMeta(ShoutMetaKeys.NAME)`               |
+| `setUrl(s)` / `getUrl()`                 | `setMeta(ShoutMetaKeys.URL, s)` / `getMeta(ShoutMetaKeys.URL)`                 |
+| `setGenre(s)` / `getGenre()`             | `setMeta(ShoutMetaKeys.GENRE, s)` / `getMeta(ShoutMetaKeys.GENRE)`             |
 | `setDescription(s)` / `getDescription()` | `setMeta(ShoutMetaKeys.DESCRIPTION, s)` / `getMeta(ShoutMetaKeys.DESCRIPTION)` |
-| `setFormat(fmt)` / `getFormat()` | `setContentFormat(fmt, usage, codecs)` / `getContentFormat()` |
-| `setMetadata(m)` | `setMetadataUtf8(m)` |
-| `setDumpfile(p)` / `getDumpfile()` | (no replacement — only useful with the deprecated `ShoutProtocols.XAUDIOCAST`) |
+| `setFormat(fmt)` / `getFormat()`         | `setContentFormat(fmt, usage, codecs)` / `getContentFormat()`                  |
+| `setMetadata(m)`                         | `setMetadataUtf8(m)`                                                           |
+| `setDumpfile(p)` / `getDumpfile()`       | (no replacement — only useful with the deprecated `ShoutProtocols.XAUDIOCAST`) |
 
 The `ShoutFormats.WEBMAUDIO` and `ShoutProtocols.XAUDIOCAST` constants are also deprecated.
 
@@ -133,26 +133,26 @@ The `ShoutFormats.WEBMAUDIO` and `ShoutProtocols.XAUDIOCAST` constants are also 
 
 v3 is a hard break. Every consumer needs changes:
 
-| v2 | v3 |
-| -- | -- |
+| v2                                       | v3                                       |
+| ---------------------------------------- | ---------------------------------------- |
 | `const nodeshout = require('nodeshout')` | `import * as nodeshout from 'nodeshout'` |
-| `nodeshout.init()` | `nodeshout.shoutInit()` |
-| `nodeshout.shutdown()` | `nodeshout.shoutShutdown()` |
-| `nodeshout.getVersion()` | `nodeshout.shoutVersion()` |
-| `nodeshout.create()` | `nodeshout.createShout()` |
-| `nodeshout.createMetadata()` | `nodeshout.createShoutMetadata()` |
-| `nodeshout.ErrorTypes` | `nodeshout.ShoutErrorTypes` |
-| `nodeshout.Formats` | `nodeshout.ShoutFormats` |
-| `nodeshout.Protocols` | `nodeshout.ShoutProtocols` |
-| `nodeshout.Usages` | `nodeshout.ShoutUsages` |
-| `nodeshout.TlsModes` | `nodeshout.ShoutTlsModes` |
-| `nodeshout.Blocking` | `nodeshout.ShoutBlocking` |
-| `nodeshout.AudioInfoKeys` | `nodeshout.ShoutAudioInfoKeys` |
-| `nodeshout.MetaKeys` | `nodeshout.ShoutMetaKeys` |
-| class `ShoutT` | class `Shout` |
-| class `MetadataT` | class `ShoutMetadata` |
+| `nodeshout.init()`                       | `nodeshout.shoutInit()`                  |
+| `nodeshout.shutdown()`                   | `nodeshout.shoutShutdown()`              |
+| `nodeshout.getVersion()`                 | `nodeshout.shoutVersion()`               |
+| `nodeshout.create()`                     | `nodeshout.createShout()`                |
+| `nodeshout.createMetadata()`             | `nodeshout.createShoutMetadata()`        |
+| `nodeshout.ErrorTypes`                   | `nodeshout.ShoutErrorTypes`              |
+| `nodeshout.Formats`                      | `nodeshout.ShoutFormats`                 |
+| `nodeshout.Protocols`                    | `nodeshout.ShoutProtocols`               |
+| `nodeshout.Usages`                       | `nodeshout.ShoutUsages`                  |
+| `nodeshout.TlsModes`                     | `nodeshout.ShoutTlsModes`                |
+| `nodeshout.Blocking`                     | `nodeshout.ShoutBlocking`                |
+| `nodeshout.AudioInfoKeys`                | `nodeshout.ShoutAudioInfoKeys`           |
+| `nodeshout.MetaKeys`                     | `nodeshout.ShoutMetaKeys`                |
+| class `ShoutT`                           | class `Shout`                            |
+| class `MetadataT`                        | class `ShoutMetadata`                    |
 
-`ShoutT` and `MetadataT` are kept as deprecated *type* aliases for one release; the runtime classes have new names.
+`ShoutT` and `MetadataT` are kept as deprecated _type_ aliases for one release; the runtime classes have new names.
 
 ## Developing
 
@@ -160,8 +160,7 @@ Tooling is pinned via [mise](https://mise.jdx.dev/) and [Yarn Berry](https://yar
 
 - `mise install` — installs node & yarn
 - `yarn install` — installs dependencies (`nodeLinker: node-modules`).
-- `mise run lint` — runs `lint:tsc`, `lint:oxlint`, and `lint:fmt` in parallel (or run any individually as `yarn lint:tsc`, etc.).
+- `mise run lint` — runs `lint:tsc`, `lint:oxlint`, and `lint:oxfmt` in parallel (or run any individually as `yarn lint:tsc`, etc.).
 - `yarn test` — runs vitest unit tests (no server required).
 - `yarn build` — emits `dist/*.js` and `dist/*.d.ts`.
 - `yarn demos` — runs both demos against a local Icecast (start `icecast -c demos/icecast.xml` first).
-

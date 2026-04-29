@@ -1,6 +1,6 @@
-import * as libshout from './libshout.js';
-import type { ShoutPtr } from './libshout.js';
-import type { ShoutMetadata } from './metadata.js';
+import * as libshout from "./libshout.js";
+import type { ShoutPtr } from "./libshout.js";
+import type { ShoutMetadata } from "./metadata.js";
 
 /**
  * Wrapper around a libshout `shout_t` connection handle.
@@ -21,7 +21,7 @@ export class Shout {
 
   constructor() {
     const ptr = libshout.shout_new();
-    if (ptr == null) throw new Error('shout_new() returned NULL');
+    if (ptr == null) throw new Error("shout_new() returned NULL");
     this.ptr = ptr;
   }
 

@@ -1,5 +1,5 @@
-import * as libshout from './libshout.js';
-import type { ShoutMetadataPtr } from './libshout.js';
+import * as libshout from "./libshout.js";
+import type { ShoutMetadataPtr } from "./libshout.js";
 
 /**
  * Wrapper around a libshout `shout_metadata_t` handle. Used with
@@ -11,7 +11,7 @@ export class ShoutMetadata {
 
   constructor() {
     const ptr = libshout.shout_metadata_new();
-    if (ptr == null) throw new Error('shout_metadata_new() returned NULL');
+    if (ptr == null) throw new Error("shout_metadata_new() returned NULL");
     this.ptr = ptr;
   }
 

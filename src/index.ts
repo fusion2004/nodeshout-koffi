@@ -1,9 +1,9 @@
-import * as libshout from './libshout.js';
-import { Shout } from './shout.js';
-import { ShoutMetadata } from './metadata.js';
+import * as libshout from "./libshout.js";
+import { Shout } from "./shout.js";
+import { ShoutMetadata } from "./metadata.js";
 
 export { Shout, ShoutMetadata };
-export type { ShoutPtr, ShoutMetadataPtr } from './libshout.js';
+export type { ShoutPtr, ShoutMetadataPtr } from "./libshout.js";
 
 /** @deprecated Use `Shout` instead. */
 export type ShoutT = Shout;
@@ -147,10 +147,10 @@ export type ShoutBlockingMode = (typeof ShoutBlocking)[keyof typeof ShoutBlockin
  * Audio info parameter keys (SHOUT_AI_*) for setAudioInfo() / getAudioInfo().
  */
 export const ShoutAudioInfoKeys = {
-  BITRATE: 'bitrate',
-  SAMPLERATE: 'samplerate',
-  CHANNELS: 'channels',
-  QUALITY: 'quality',
+  BITRATE: "bitrate",
+  SAMPLERATE: "samplerate",
+  CHANNELS: "channels",
+  QUALITY: "quality",
 } as const;
 export type ShoutAudioInfoKey = (typeof ShoutAudioInfoKeys)[keyof typeof ShoutAudioInfoKeys];
 
@@ -158,12 +158,12 @@ export type ShoutAudioInfoKey = (typeof ShoutAudioInfoKeys)[keyof typeof ShoutAu
  * Stream metadata keys (SHOUT_META_*) for setMeta() / getMeta().
  */
 export const ShoutMetaKeys = {
-  NAME: 'name',
-  URL: 'url',
-  GENRE: 'genre',
-  DESCRIPTION: 'description',
-  IRC: 'irc',
-  AIM: 'aim',
-  ICQ: 'icq',
+  NAME: "name",
+  URL: "url",
+  GENRE: "genre",
+  DESCRIPTION: "description",
+  IRC: "irc",
+  AIM: "aim",
+  ICQ: "icq",
 } as const;
 export type ShoutMetaKey = (typeof ShoutMetaKeys)[keyof typeof ShoutMetaKeys];

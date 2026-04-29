@@ -11,11 +11,11 @@ run = "yarn lint:tsc"
 [tasks."lint:oxlint"]
 run = "yarn lint:oxlint"
 
-[tasks."lint:fmt"]
-run = "yarn lint:fmt"
+[tasks."lint:oxfmt"]
+run = "yarn lint:oxfmt"
 
 [tasks.lint]
-depends = ["lint:tsc", "lint:oxlint", "lint:fmt"]
+depends = ["lint:tsc", "lint:oxlint", "lint:oxfmt"]
 
 [tasks.demos]
 run = "yarn demos"
