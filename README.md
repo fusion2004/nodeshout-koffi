@@ -1,6 +1,6 @@
 # nodeshout
 
-Native libshout bindings for node.js.
+Native libshout bindings for Node.js.
 
 > Libshout allows applications to easily communicate and broadcast to an Icecast streaming media server. It handles the socket connections, metadata communication, and data streaming for the calling application, and lets developers focus on feature sets instead of implementation details.
 
@@ -8,28 +8,49 @@ More detail: http://icecast.org
 
 Tracks libshout 2.4.x. Upstream API reference: https://gitlab.xiph.org/xiph/icecast-libshout/-/blob/master/doc/libshout.xml.
 
+## Requirements
+
+- **Node.js >= 22** — supports active LTS (24) and maintenance LTS (22).
+- **libshout** installed at the system level.
+
+Install libshout:
+
+```sh
+# macOS
+brew install libshout
+
+# Debian/Ubuntu
+sudo apt-get install libshout3
+```
+
+Then add nodeshout:
+
+```sh
+yarn add nodeshout
+# or: npm i nodeshout
+```
+
 ## Usage
 
-You have to install libshout library before using nodeshout. If you work on macOS, you can install via homebrew.
+nodeshout is a **pure ESM** package. Import named exports:
 
-```
-brew install libshout
-```
+```ts
+import {
+  shoutInit,
+  shoutShutdown,
+  shoutVersion,
+  createShout,
+  ShoutErrorTypes,
+  ShoutFormats,
+  ShoutUsages,
+  ShoutAudioInfoKeys,
+} from 'nodeshout';
 
-Then, install nodeshout via npm.
-
-```
-npm i nodeshout
-```
-
-Initalize nodeshout library, create a `Shout` instance and configure it.
-
-```js
-// Initalize
-nodeshout.init();
+// Initialize
+shoutInit();
 
 // Create a shout instance
-const shout = nodeshout.create();
+const shout = createShout();
 
 // Configure it
 shout.setHost('localhost');
@@ -37,78 +58,111 @@ shout.setPort(8000);
 shout.setUser('source');
 shout.setPassword('password');
 shout.setMount('mount');
-shout.setContentFormat(nodeshout.Formats.MP3, nodeshout.Usages.AUDIO, null);
-shout.setAudioInfo(nodeshout.AudioInfoKeys.BITRATE, '192');
-shout.setAudioInfo(nodeshout.AudioInfoKeys.SAMPLERATE, '44100');
-shout.setAudioInfo(nodeshout.AudioInfoKeys.CHANNELS, '2');
+shout.setContentFormat(ShoutFormats.MP3, ShoutUsages.AUDIO, null);
+shout.setAudioInfo(ShoutAudioInfoKeys.BITRATE, '192');
+shout.setAudioInfo(ShoutAudioInfoKeys.SAMPLERATE, '44100');
+shout.setAudioInfo(ShoutAudioInfoKeys.CHANNELS, '2');
 ```
 
-Open the connection — and check the return code. Every method documented as "Callers should check this" returns `nodeshout.ErrorTypes.SUCCESS` (`0`) on success or a negative `ErrorTypes` value on failure. On failure, `shout.getError()` returns a human-readable message.
+Open the connection — and check the return code. Every method documented as "Callers should check this" returns `ShoutErrorTypes.SUCCESS` (`0`) on success or a negative `ShoutErrorTypes` value on failure. On failure, `shout.getError()` returns a human-readable message.
 
-```js
+```ts
 const status = shout.open();
-if (status !== nodeshout.ErrorTypes.SUCCESS) {
-    console.error('shout_open failed:', shout.getError());
-    process.exit(1);
+if (status !== ShoutErrorTypes.SUCCESS) {
+  console.error('shout_open failed:', shout.getError());
+  process.exit(1);
 }
 ```
 
 After successful connection, send audio file chunks via `shout.send` (also checked):
 
-```js
+```ts
 const sendStatus = shout.send(buffer, bytesRead);
-if (sendStatus !== nodeshout.ErrorTypes.SUCCESS) {
-    console.error('shout_send failed:', shout.getError());
-    break;
+if (sendStatus !== ShoutErrorTypes.SUCCESS) {
+  console.error('shout_send failed:', shout.getError());
 }
 ```
 
-For the synchronization, there is 2 method provided. First one is `shout.sync()` method, this method blocks current thread. Second one is `shout.delay()` method, this method returns how many milliseconds you should wait to send next audio chunk.
+For synchronization, two methods are provided. `shout.sync()` blocks the current thread. `shout.delay()` returns how many milliseconds to wait before sending the next audio chunk.
 
-> If you're gonna stream multiple files, beware that Icecast requires stable bitrate & sample rate for the whole stream. So all of your music files should have the exact bitrate & sample rate.
+> If you're streaming multiple files, beware that Icecast requires stable bitrate and sample rate for the whole stream. All your music files should have identical bitrate and sample rate.
 
 ## Examples
 
-Check the `/demos` folder.
+Check the `/demos` folder. Run them via:
+
+```sh
+yarn demo:blocking
+yarn demo:nonblocking
+```
+
+(Both expect a local Icecast on `localhost:8000` with credentials `source:hackme` and a sample MP3 at `music/test.mp3`.)
 
 ## Constants
 
-All libshout enums are exposed as grouped objects on the module:
+All libshout enums are exposed as named `as const` objects:
 
-| Group | Purpose |
+| Export | Purpose |
 | -- | -- |
-| `nodeshout.ErrorTypes` | `SHOUTERR_*` codes returned by every checked method. |
-| `nodeshout.Formats` | `SHOUT_FORMAT_*` — pass to `setContentFormat()`. |
-| `nodeshout.Usages` | `SHOUT_USAGE_*` — bitwise OR for `setContentFormat()`. |
-| `nodeshout.Protocols` | `SHOUT_PROTOCOL_*` — pass to `setProtocol()`. |
-| `nodeshout.TlsModes` | `SHOUT_TLS_*` — pass to `setTls()`. |
-| `nodeshout.Blocking` | `SHOUT_BLOCKING_*` — pass to `setNonblocking()`. |
-| `nodeshout.AudioInfoKeys` | `SHOUT_AI_*` — keys for `setAudioInfo()` / `getAudioInfo()`. |
-| `nodeshout.MetaKeys` | `SHOUT_META_*` — keys for `setMeta()` / `getMeta()`. |
+| `ShoutErrorTypes` | `SHOUTERR_*` codes returned by every checked method. |
+| `ShoutFormats` | `SHOUT_FORMAT_*` — pass to `setContentFormat()`. |
+| `ShoutUsages` | `SHOUT_USAGE_*` — bitwise OR for `setContentFormat()`. |
+| `ShoutProtocols` | `SHOUT_PROTOCOL_*` — pass to `setProtocol()`. |
+| `ShoutTlsModes` | `SHOUT_TLS_*` — pass to `setTls()`. |
+| `ShoutBlocking` | `SHOUT_BLOCKING_*` — pass to `setNonblocking()`. |
+| `ShoutAudioInfoKeys` | `SHOUT_AI_*` — keys for `setAudioInfo()` / `getAudioInfo()`. |
+| `ShoutMetaKeys` | `SHOUT_META_*` — keys for `setMeta()` / `getMeta()`. |
 
 ## Deprecated APIs
 
-These wrappers still work but are marked `@deprecated` because the underlying libshout
-functions are obsolete. New code should use the listed replacements:
+These wrappers still work but are marked `@deprecated` because the underlying libshout functions are obsolete. New code should use the listed replacements:
 
 | Deprecated | Replacement |
 | -- | -- |
-| `setName(s)` / `getName()` | `setMeta(MetaKeys.NAME, s)` / `getMeta(MetaKeys.NAME)` |
-| `setUrl(s)` / `getUrl()` | `setMeta(MetaKeys.URL, s)` / `getMeta(MetaKeys.URL)` |
-| `setGenre(s)` / `getGenre()` | `setMeta(MetaKeys.GENRE, s)` / `getMeta(MetaKeys.GENRE)` |
-| `setDescription(s)` / `getDescription()` | `setMeta(MetaKeys.DESCRIPTION, s)` / `getMeta(MetaKeys.DESCRIPTION)` |
+| `setName(s)` / `getName()` | `setMeta(ShoutMetaKeys.NAME, s)` / `getMeta(ShoutMetaKeys.NAME)` |
+| `setUrl(s)` / `getUrl()` | `setMeta(ShoutMetaKeys.URL, s)` / `getMeta(ShoutMetaKeys.URL)` |
+| `setGenre(s)` / `getGenre()` | `setMeta(ShoutMetaKeys.GENRE, s)` / `getMeta(ShoutMetaKeys.GENRE)` |
+| `setDescription(s)` / `getDescription()` | `setMeta(ShoutMetaKeys.DESCRIPTION, s)` / `getMeta(ShoutMetaKeys.DESCRIPTION)` |
 | `setFormat(fmt)` / `getFormat()` | `setContentFormat(fmt, usage, codecs)` / `getContentFormat()` |
 | `setMetadata(m)` | `setMetadataUtf8(m)` |
-| `setDumpfile(p)` / `getDumpfile()` | (no replacement — only useful with the deprecated `Protocols.XAUDIOCAST`) |
+| `setDumpfile(p)` / `getDumpfile()` | (no replacement — only useful with the deprecated `ShoutProtocols.XAUDIOCAST`) |
 
-The `Formats.WEBMAUDIO` and `Protocols.XAUDIOCAST` constants are also deprecated.
+The `ShoutFormats.WEBMAUDIO` and `ShoutProtocols.XAUDIOCAST` constants are also deprecated.
+
+## Migrating from v2
+
+v3 is a hard break. Every consumer needs changes:
+
+| v2 | v3 |
+| -- | -- |
+| `const nodeshout = require('nodeshout')` | `import * as nodeshout from 'nodeshout'` |
+| `nodeshout.init()` | `nodeshout.shoutInit()` |
+| `nodeshout.shutdown()` | `nodeshout.shoutShutdown()` |
+| `nodeshout.getVersion()` | `nodeshout.shoutVersion()` |
+| `nodeshout.create()` | `nodeshout.createShout()` |
+| `nodeshout.createMetadata()` | `nodeshout.createShoutMetadata()` |
+| `nodeshout.ErrorTypes` | `nodeshout.ShoutErrorTypes` |
+| `nodeshout.Formats` | `nodeshout.ShoutFormats` |
+| `nodeshout.Protocols` | `nodeshout.ShoutProtocols` |
+| `nodeshout.Usages` | `nodeshout.ShoutUsages` |
+| `nodeshout.TlsModes` | `nodeshout.ShoutTlsModes` |
+| `nodeshout.Blocking` | `nodeshout.ShoutBlocking` |
+| `nodeshout.AudioInfoKeys` | `nodeshout.ShoutAudioInfoKeys` |
+| `nodeshout.MetaKeys` | `nodeshout.ShoutMetaKeys` |
+| class `ShoutT` | class `Shout` |
+| class `MetadataT` | class `ShoutMetadata` |
+
+`ShoutT` and `MetadataT` are kept as deprecated *type* aliases for one release; the runtime classes have new names.
 
 ## Developing
-Below is a short guild to the development in this repository
 
-- Clone repository
-- Verify that your node version and NPM version are compatible with the repository. [NVM](https://github.com/nvm-sh/nvm) is useful here.
-- Verify that you have the libshout dependency installed, for Mac OSX you can install with `brew install libshout` on a linux distribution like Ubuntu you need to download the source or binary and build it. Typically after building it will install to a directory like `/usr/local/lib/libshout`
-- Install dependencies: `npm i`
-- Start icecast server
-- Run `npm test` and see it's working
+Tooling is pinned via [mise](https://mise.jdx.dev/) and [Yarn Berry](https://yarnpkg.com/):
+
+- `mise install` — provisions Node 22 and Yarn 4.14.1.
+- `yarn install` — installs dependencies (`nodeLinker: node-modules`).
+- `yarn typecheck` — runs `tsc --noEmit`.
+- `yarn test` — runs vitest unit tests (no server required).
+- `yarn build` — emits `dist/*.js` and `dist/*.d.ts`.
+- `yarn demos` — runs both demos against a local Icecast (start `icecast -c demos/icecast.xml` first).
+
+CI runs typecheck + tests + build on Node 22 and 24.
