@@ -158,11 +158,10 @@ v3 is a hard break. Every consumer needs changes:
 
 Tooling is pinned via [mise](https://mise.jdx.dev/) and [Yarn Berry](https://yarnpkg.com/):
 
-- `mise install` — provisions Node 22 and Yarn 4.14.1.
+- `mise install` — installs node & yarn
 - `yarn install` — installs dependencies (`nodeLinker: node-modules`).
 - `yarn typecheck` — runs `tsc --noEmit`.
 - `yarn test` — runs vitest unit tests (no server required).
 - `yarn build` — emits `dist/*.js` and `dist/*.d.ts`.
 - `yarn demos` — runs both demos against a local Icecast (start `icecast -c demos/icecast.xml` first).
 
-CI runs typecheck + tests + build on Node 22 and 24.
