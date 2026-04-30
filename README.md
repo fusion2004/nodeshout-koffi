@@ -167,14 +167,8 @@ Tooling is pinned via [mise](https://mise.jdx.dev/) and [Yarn Berry](https://yar
 
 ## Releasing new versions
 
-The release flow is split into two halves: GitHub Actions handles the npm publish, and the maintainer tags the commit locally afterwards.
+Publishing is driven by tag pushes: the maintainer runs `mise run release`, and the publish workflow takes it from there.
 
-1. **Bump the version.** Open a PR that updates `version` in `package.json` (and any other release-prep changes — changelog, etc.). Get it reviewed and merged into `main`.
-2. **Publish to npm.** On GitHub, go to the **Actions** tab → **Release** workflow → **Run workflow**, targeting `main`. This runs `yarn npm publish --access public --provenance`, which triggers the `prepack` script (`yarn clean && yarn build`) and pushes the tarball to npm with an OIDC-attested provenance statement. If the version is already published, npm rejects it and the workflow fails.
-3. **Tag the release.** Once the workflow succeeds, pull the latest `main` locally and run:
-
-   ```sh
-   mise run release
-   ```
-
-   This reads the version from `package.json`, creates an annotated tag prefixed with `v` (e.g. `v3.0.0`), and pushes it to `origin`. Run this from the exact commit that was just published — typically the merge commit of the version-bump PR.
+1. Merge a PR that bumps the version in `package.json` (and any other release-prep changes — changelog, etc.) into main.
+2. Pull the latest main locally and run `mise run release`. This reads the version from `package.json`, creates an annotated tag prefixed with `v` (e.g. `v3.0.0`), and pushes it to `origin`. Run this from the exact commit you want to release — typically the merge commit of the version-bump PR.
+3. Pushing the tag triggers the publish workflow, which publishes the package to npm with an OIDC-attested provenance statement via npm trusted publishing. If the version is already on the registry, npm rejects it and the workflow fails.

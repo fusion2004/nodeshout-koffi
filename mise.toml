@@ -25,8 +25,8 @@ run = "yarn test"
 
 # Tag the current commit with v<version> (from package.json) and push the tag
 # to origin. Intended workflow: merge a PR that bumps the package.json version
-# into main, run the Release workflow on GitHub Actions to publish to npm, then
-# run this task on latest main to record the released commit as v<version>.
+# into main, then run this task on latest main. Pushing the tag triggers the
+# publish workflow on GitHub Actions, which publishes to npm.
 [tasks.release]
 description = "Tag the current commit with v<package.json version> and push to origin"
 run = '''
