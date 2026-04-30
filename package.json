@@ -49,10 +49,10 @@
     "prepack": "yarn clean && yarn build"
   },
   "dependencies": {
-    "koffi": "^2.9.0"
+    "koffi": "^2.16.1"
   },
   "devDependencies": {
-    "@types/node": "^22.0.0",
+    "@types/node": "^22.19.17",
     "oxfmt": "^0.47.0",
     "oxlint": "^1.62.0",
     "tsx": "^4.21.0",

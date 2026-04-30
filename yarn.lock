@@ -219,8 +219,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@fusion2004/nodeshout-koffi@workspace:."
   dependencies:
-    "@types/node": "npm:^22.0.0"
-    koffi: "npm:^2.9.0"
+    "@types/node": "npm:^22.19.17"
+    koffi: "npm:^2.16.1"
     oxfmt: "npm:^0.47.0"
     oxlint: "npm:^1.62.0"
     tsx: "npm:^4.21.0"
@@ -686,7 +686,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^22.0.0":
+"@types/node@npm:^22.19.17":
   version: 22.19.17
   resolution: "@types/node@npm:22.19.17"
   dependencies:
@@ -999,7 +999,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"koffi@npm:^2.9.0":
+"koffi@npm:^2.16.1":
   version: 2.16.1
   resolution: "koffi@npm:2.16.1"
   checksum: 10/6675c723e0c120246a469c4e93895b7bf0837b0a862ef8a160b846f1684d23096da9a65f3b77cd8a85b775dcba668d478634e0b712c76d85e8a9a1eca1faadf6
