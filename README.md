@@ -178,4 +178,3 @@ The release flow is split into two halves: GitHub Actions handles the npm publis
    ```
 
    This reads the version from `package.json`, creates an annotated tag prefixed with `v` (e.g. `v3.0.0`), and pushes it to `origin`. Run this from the exact commit that was just published — typically the merge commit of the version-bump PR.
-
