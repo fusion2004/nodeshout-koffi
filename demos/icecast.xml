@@ -1,4 +1,6 @@
 <icecast>
+    <location>Earth</location>
+    <admin>icemaster@localhost</admin>
     <limits>
         <clients>100</clients>
         <sources>10</sources>
@@ -14,8 +16,9 @@
     </listen-socket>
     <paths>
         <logdir>/tmp</logdir>
-        <webroot>/usr/share/icecast2/web</webroot>
-        <adminroot>/usr/share/icecast2/admin</adminroot>
+        <webroot>/usr/share/icecast/web</webroot>
+        <adminroot>/usr/share/icecast/admin</adminroot>
+        <alias source="/" destination="/status.xsl"/>
     </paths>
     <logging>
         <accesslog>-</accesslog>

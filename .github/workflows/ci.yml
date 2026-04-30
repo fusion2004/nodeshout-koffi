@@ -62,7 +62,7 @@ jobs:
             libretime/icecast:2.4.4-debian \
             icecast -c /etc/icecast.xml
           for i in $(seq 1 30); do
-            if curl -sf http://localhost:8000/status.xsl > /dev/null; then
+            if curl -sf http://localhost:8000/status-json.xsl > /dev/null; then
               echo "Icecast ready after ${i}s"
               exit 0
             fi
