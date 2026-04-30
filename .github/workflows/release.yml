@@ -11,7 +11,7 @@ jobs:
       contents: read
       id-token: write # required for provenance attestation & trusted publishing OIDC
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Install mise
         uses: jdx/mise-action@v4

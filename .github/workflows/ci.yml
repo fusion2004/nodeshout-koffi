@@ -17,7 +17,7 @@ jobs:
       matrix:
         node: [22, 24]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Install libshout
         run: sudo apt-get update && sudo apt-get install -y libshout3
