@@ -6,6 +6,17 @@
       "matchUpdateTypes": ["minor", "patch"],
       "groupName": "all non-major dependencies",
       "groupSlug": "non-major"
+    },
+    {
+      "matchManagers": ["mise"],
+      "matchDepNames": ["node"],
+      "enabled": false
+    },
+    {
+      "matchManagers": ["npm"],
+      "matchDepTypes": ["engines"],
+      "matchDepNames": ["node"],
+      "enabled": false
     }
   ],
   "rangeStrategy": "bump"
