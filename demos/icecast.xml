@@ -1,0 +1,28 @@
+<icecast>
+    <location>Earth</location>
+    <admin>icemaster@localhost</admin>
+    <limits>
+        <clients>100</clients>
+        <sources>10</sources>
+    </limits>
+    <authentication>
+        <source-password>hackme</source-password>
+        <relay-password>hackme</relay-password>
+        <admin-user>admin</admin-user>
+        <admin-password>hackme</admin-password>
+    </authentication>
+    <listen-socket>
+        <port>8000</port>
+    </listen-socket>
+    <paths>
+        <logdir>/tmp</logdir>
+        <webroot>/usr/share/icecast/web</webroot>
+        <adminroot>/usr/share/icecast/admin</adminroot>
+        <alias source="/" destination="/status.xsl"/>
+    </paths>
+    <logging>
+        <accesslog>-</accesslog>
+        <errorlog>-</errorlog>
+        <loglevel>3</loglevel>
+    </logging>
+</icecast>

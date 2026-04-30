@@ -1,28 +1,66 @@
 {
-  "name": "nodeshout",
-  "version": "2.0.0",
+  "name": "@fusion2004/nodeshout-koffi",
+  "version": "3.0.0",
   "description": "Native libshout bindings for node.",
-  "main": "src/index.js",
-  "scripts": {
-    "test": "node ./demos/01-blocking-io.js && node ./demos/02-non-blocking-io.js"
+  "keywords": [
+    "icecast",
+    "libshout",
+    "radio",
+    "stream"
+  ],
+  "homepage": "https://github.com/fusion2004/nodeshout-koffi",
+  "bugs": {
+    "url": "https://github.com/fusion2004/nodeshout-koffi/issues"
   },
-  "author": "Deniz Gurkaynak <dgurkaynak@gmail.com>",
-  "homepage": "https://github.com/dgurkaynak/nodeshout",
+  "license": "MIT",
+  "author": "Mark Oleson <fusion2004@gmail.com>",
   "repository": {
     "type": "git",
-    "url": "https://github.com/dgurkaynak/nodeshout.git"
+    "url": "https://github.com/fusion2004/nodeshout-koffi.git"
   },
-  "bugs": {
-    "url": "https://github.com/dgurkaynak/nodeshout/issues"
-  },
-  "keywords": [
-    "libshout",
-    "icecast",
-    "stream",
-    "radio"
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
   ],
-  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "clean": "rm -rf dist",
+    "lint:tsc": "tsc --noEmit",
+    "lint:oxlint": "oxlint",
+    "lint:oxlint:fix": "oxlint --fix",
+    "lint:oxfmt": "oxfmt --check",
+    "lint:oxfmt:fix": "oxfmt",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "demo:blocking": "tsx demos/01-blocking-io.ts",
+    "demo:nonblocking": "tsx demos/02-non-blocking-io.ts",
+    "demos": "yarn demo:blocking && yarn demo:nonblocking",
+    "prepack": "yarn clean && yarn build"
+  },
   "dependencies": {
     "koffi": "^2.9.0"
-  }
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "oxfmt": "^0.47.0",
+    "oxlint": "^1.62.0",
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.5"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "packageManager": "yarn@4.14.1"
 }

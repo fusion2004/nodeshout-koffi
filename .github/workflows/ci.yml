@@ -1,0 +1,83 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Node ${{ matrix.node }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [22, 24]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install libshout
+        run: sudo apt-get update && sudo apt-get install -y libshout3
+
+      - name: Create mise.test.toml
+        run: |
+          cat <<EOF > mise.test.toml
+          [tools]
+          node = "${{ matrix.node }}"
+          EOF
+
+      - name: Install mise
+        uses: jdx/mise-action@v4
+
+      - name: Cache node_modules
+        uses: actions/cache@v5
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node_modules-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-node_modules-
+
+      - name: Cache yarn global cache
+        uses: actions/cache@v5
+        with:
+          path: ~/.yarn/berry
+          key: ${{ runner.os }}-yarn-berry-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-berry-
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Lint
+        run: mise run lint
+
+      - name: Test
+        run: mise run test
+
+      - name: Start Icecast
+        run: |
+          docker run -d --name icecast \
+            -p 8000:8000 \
+            -v ${{ github.workspace }}/demos/icecast.xml:/etc/icecast.xml:ro \
+            libretime/icecast:2.4.4-debian \
+            icecast -c /etc/icecast.xml
+          for i in $(seq 1 30); do
+            if curl -sf http://localhost:8000/status-json.xsl > /dev/null; then
+              echo "Icecast ready after ${i}s"
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "Icecast did not become ready"
+          docker logs icecast || true
+          exit 1
+
+      - name: Demos
+        run: mise run demos
+
+      - name: Icecast logs (on failure)
+        if: failure()
+        run: docker logs icecast || true
