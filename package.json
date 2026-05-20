@@ -49,7 +49,7 @@
     "prepack": "yarn clean && yarn build"
   },
   "dependencies": {
-    "koffi": "^2.16.1"
+    "koffi": "^3.0.1"
   },
   "devDependencies": {
     "@types/node": "^22.19.17",
