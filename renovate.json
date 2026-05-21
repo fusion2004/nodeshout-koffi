@@ -14,9 +14,7 @@
       "enabled": false
     },
     {
-      "matchPackageNames": [
-        "*"
-      ],
+      "matchPackageNames": ["*"],
       "rangeStrategy": "bump"
     }
   ],
