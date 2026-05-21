@@ -1,5 +1,5 @@
 import koffi from "koffi";
-import type { KoffiFunc, IKoffiLib } from "koffi";
+import type { KoffiFunc, LibraryHandle } from "koffi";
 import type {
   ShoutBlockingMode,
   ShoutErrorType,
@@ -12,12 +12,12 @@ type IKoffiCType = ReturnType<typeof koffi.opaque>;
 
 declare const ShoutPtrBrand: unique symbol;
 declare const ShoutMetadataPtrBrand: unique symbol;
-export type ShoutPtr = { readonly [ShoutPtrBrand]: "shout_t" };
-export type ShoutMetadataPtr = { readonly [ShoutMetadataPtrBrand]: "shout_metadata_t" };
+export type ShoutPtr = bigint & { readonly [ShoutPtrBrand]: "shout_t" };
+export type ShoutMetadataPtr = bigint & { readonly [ShoutMetadataPtrBrand]: "shout_metadata_t" };
 
 function resolveOrCreate(name: string): IKoffiCType {
   try {
-    return koffi.resolve(name);
+    return koffi.type(name);
   } catch {
     return koffi.opaque(name);
   }
@@ -26,7 +26,7 @@ function resolveOrCreate(name: string): IKoffiCType {
 resolveOrCreate("shout_t");
 resolveOrCreate("shout_metadata_t");
 
-function loadLibshout(): IKoffiLib {
+function loadLibshout(): LibraryHandle {
   const candidates = [
     "libshout.so",
     "libshout.so.3",
@@ -48,7 +48,7 @@ function loadLibshout(): IKoffiLib {
   );
 }
 
-const lib: IKoffiLib = loadLibshout();
+const lib: LibraryHandle = loadLibshout();
 
 // Lifecycle
 export const shout_init = lib.func("void shout_init()") as KoffiFunc<() => void>;

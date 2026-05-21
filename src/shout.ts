@@ -29,7 +29,7 @@ export class Shout {
 
   constructor() {
     const ptr = libshout.shout_new();
-    if (ptr == null) throw new Error("shout_new() returned NULL");
+    if (ptr == null || ptr === 0n) throw new Error("shout_new() returned NULL");
     this.ptr = ptr;
   }
 
