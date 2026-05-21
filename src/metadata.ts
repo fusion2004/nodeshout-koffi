@@ -12,7 +12,7 @@ export class ShoutMetadata {
 
   constructor() {
     const ptr = libshout.shout_metadata_new();
-    if (ptr == null) throw new Error("shout_metadata_new() returned NULL");
+    if (ptr == null || ptr === 0n) throw new Error("shout_metadata_new() returned NULL");
     this.ptr = ptr;
   }
 
