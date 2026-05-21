@@ -12,6 +12,12 @@
       "matchDepTypes": ["engines"],
       "matchDepNames": ["node"],
       "enabled": false
+    },
+    {
+      "matchPackageNames": [
+        "*"
+      ],
+      "rangeStrategy": "bump"
     }
   ],
   "rangeStrategy": "bump"
