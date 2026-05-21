@@ -135,24 +135,24 @@ The `ShoutFormats.WEBMAUDIO` and `ShoutProtocols.XAUDIOCAST` constants are also 
 
 v3 is a hard break. Every consumer needs changes:
 
-| v2                                       | v3                                       |
-| ---------------------------------------- | ---------------------------------------- |
+| v2                                       | v3                                                         |
+| ---------------------------------------- | ---------------------------------------------------------- |
 | `const nodeshout = require('nodeshout')` | `import * as nodeshout from '@fusion2004/nodeshout-koffi'` |
-| `nodeshout.init()`                       | `nodeshout.shoutInit()`                  |
-| `nodeshout.shutdown()`                   | `nodeshout.shoutShutdown()`              |
-| `nodeshout.getVersion()`                 | `nodeshout.shoutVersion()`               |
-| `nodeshout.create()`                     | `nodeshout.createShout()`                |
-| `nodeshout.createMetadata()`             | `nodeshout.createShoutMetadata()`        |
-| `nodeshout.ErrorTypes`                   | `nodeshout.ShoutErrorTypes`              |
-| `nodeshout.Formats`                      | `nodeshout.ShoutFormats`                 |
-| `nodeshout.Protocols`                    | `nodeshout.ShoutProtocols`               |
-| `nodeshout.Usages`                       | `nodeshout.ShoutUsages`                  |
-| `nodeshout.TlsModes`                     | `nodeshout.ShoutTlsModes`                |
-| `nodeshout.Blocking`                     | `nodeshout.ShoutBlocking`                |
-| `nodeshout.AudioInfoKeys`                | `nodeshout.ShoutAudioInfoKeys`           |
-| `nodeshout.MetaKeys`                     | `nodeshout.ShoutMetaKeys`                |
-| class `ShoutT`                           | class `Shout`                            |
-| class `MetadataT`                        | class `ShoutMetadata`                    |
+| `nodeshout.init()`                       | `nodeshout.shoutInit()`                                    |
+| `nodeshout.shutdown()`                   | `nodeshout.shoutShutdown()`                                |
+| `nodeshout.getVersion()`                 | `nodeshout.shoutVersion()`                                 |
+| `nodeshout.create()`                     | `nodeshout.createShout()`                                  |
+| `nodeshout.createMetadata()`             | `nodeshout.createShoutMetadata()`                          |
+| `nodeshout.ErrorTypes`                   | `nodeshout.ShoutErrorTypes`                                |
+| `nodeshout.Formats`                      | `nodeshout.ShoutFormats`                                   |
+| `nodeshout.Protocols`                    | `nodeshout.ShoutProtocols`                                 |
+| `nodeshout.Usages`                       | `nodeshout.ShoutUsages`                                    |
+| `nodeshout.TlsModes`                     | `nodeshout.ShoutTlsModes`                                  |
+| `nodeshout.Blocking`                     | `nodeshout.ShoutBlocking`                                  |
+| `nodeshout.AudioInfoKeys`                | `nodeshout.ShoutAudioInfoKeys`                             |
+| `nodeshout.MetaKeys`                     | `nodeshout.ShoutMetaKeys`                                  |
+| class `ShoutT`                           | class `Shout`                                              |
+| class `MetadataT`                        | class `ShoutMetadata`                                      |
 
 `ShoutT` and `MetadataT` are kept as deprecated _type_ aliases for one release; the runtime classes have new names.
 
