@@ -52,12 +52,12 @@
     "koffi": "^3.0.1"
   },
   "devDependencies": {
-    "@types/node": "^22.19.17",
-    "oxfmt": "^0.48.0",
-    "oxlint": "^1.63.0",
-    "tsx": "^4.21.0",
+    "@types/node": "^22.19.19",
+    "oxfmt": "^0.50.0",
+    "oxlint": "^1.65.0",
+    "tsx": "^4.22.1",
     "typescript": "^6.0.3",
-    "vitest": "^4.1.5"
+    "vitest": "^4.1.6"
   },
   "engines": {
     "node": ">=22.0.0"
