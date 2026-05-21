@@ -1,4 +1,6 @@
-# nodeshout
+[![NPM Version](https://img.shields.io/npm/v/%40fusion2004%2Fnodeshout-koffi)](https://www.npmjs.com/package/@fusion2004/nodeshout-koffi)
+
+# @fusion2004/nodeshout-koffi
 
 Native libshout bindings for Node.js.
 
@@ -23,16 +25,16 @@ brew install libshout
 sudo apt-get install libshout3
 ```
 
-Then add nodeshout:
+Then add this package to your application:
 
 ```sh
-yarn add nodeshout
-# or: npm i nodeshout
+yarn add @fusion2004/nodeshout-koffi
+# or: npm i @fusion2004/nodeshout-koffi
 ```
 
 ## Usage
 
-nodeshout is a **pure ESM** package. Import named exports:
+@fusion2004/nodeshout-koffi is a **pure ESM** package. Import named exports:
 
 ```ts
 import {
@@ -44,7 +46,7 @@ import {
   ShoutFormats,
   ShoutUsages,
   ShoutAudioInfoKeys,
-} from "nodeshout";
+} from "@fusion2004/nodeshout-koffi";
 
 // Initialize
 shoutInit();
@@ -64,7 +66,7 @@ shout.setAudioInfo(ShoutAudioInfoKeys.SAMPLERATE, "44100");
 shout.setAudioInfo(ShoutAudioInfoKeys.CHANNELS, "2");
 ```
 
-Open the connection — and check the return code. Every method documented as "Callers should check this" returns `ShoutErrorTypes.SUCCESS` (`0`) on success or a negative `ShoutErrorTypes` value on failure. On failure, `shout.getError()` returns a human-readable message.
+Open the connection and check the return code. Every method documented as "Callers should check this" returns `ShoutErrorTypes.SUCCESS` (`0`) on success or a negative `ShoutErrorTypes` value on failure. On failure, `shout.getError()` returns a human-readable message.
 
 ```ts
 const status = shout.open();
@@ -74,7 +76,7 @@ if (status !== ShoutErrorTypes.SUCCESS) {
 }
 ```
 
-After successful connection, send audio file chunks via `shout.send` (also checked):
+After successful connection, send audio file chunks via `shout.send` (which you should also check for success):
 
 ```ts
 const sendStatus = shout.send(buffer, bytesRead);
@@ -96,7 +98,7 @@ yarn demo:blocking
 yarn demo:nonblocking
 ```
 
-(Both expect a local Icecast on `localhost:8000` with credentials `source:hackme` and a sample MP3 at `music/test.mp3`.)
+(Both expect a local Icecast on `localhost:8000` with credentials `source:hackme` which can be run via `icecast -c demos/icecast.xml`.)
 
 ## Constants
 
@@ -133,34 +135,34 @@ The `ShoutFormats.WEBMAUDIO` and `ShoutProtocols.XAUDIOCAST` constants are also 
 
 v3 is a hard break. Every consumer needs changes:
 
-| v2                                       | v3                                       |
-| ---------------------------------------- | ---------------------------------------- |
-| `const nodeshout = require('nodeshout')` | `import * as nodeshout from 'nodeshout'` |
-| `nodeshout.init()`                       | `nodeshout.shoutInit()`                  |
-| `nodeshout.shutdown()`                   | `nodeshout.shoutShutdown()`              |
-| `nodeshout.getVersion()`                 | `nodeshout.shoutVersion()`               |
-| `nodeshout.create()`                     | `nodeshout.createShout()`                |
-| `nodeshout.createMetadata()`             | `nodeshout.createShoutMetadata()`        |
-| `nodeshout.ErrorTypes`                   | `nodeshout.ShoutErrorTypes`              |
-| `nodeshout.Formats`                      | `nodeshout.ShoutFormats`                 |
-| `nodeshout.Protocols`                    | `nodeshout.ShoutProtocols`               |
-| `nodeshout.Usages`                       | `nodeshout.ShoutUsages`                  |
-| `nodeshout.TlsModes`                     | `nodeshout.ShoutTlsModes`                |
-| `nodeshout.Blocking`                     | `nodeshout.ShoutBlocking`                |
-| `nodeshout.AudioInfoKeys`                | `nodeshout.ShoutAudioInfoKeys`           |
-| `nodeshout.MetaKeys`                     | `nodeshout.ShoutMetaKeys`                |
-| class `ShoutT`                           | class `Shout`                            |
-| class `MetadataT`                        | class `ShoutMetadata`                    |
+| v2                                       | v3                                                         |
+| ---------------------------------------- | ---------------------------------------------------------- |
+| `const nodeshout = require('nodeshout')` | `import * as nodeshout from '@fusion2004/nodeshout-koffi'` |
+| `nodeshout.init()`                       | `nodeshout.shoutInit()`                                    |
+| `nodeshout.shutdown()`                   | `nodeshout.shoutShutdown()`                                |
+| `nodeshout.getVersion()`                 | `nodeshout.shoutVersion()`                                 |
+| `nodeshout.create()`                     | `nodeshout.createShout()`                                  |
+| `nodeshout.createMetadata()`             | `nodeshout.createShoutMetadata()`                          |
+| `nodeshout.ErrorTypes`                   | `nodeshout.ShoutErrorTypes`                                |
+| `nodeshout.Formats`                      | `nodeshout.ShoutFormats`                                   |
+| `nodeshout.Protocols`                    | `nodeshout.ShoutProtocols`                                 |
+| `nodeshout.Usages`                       | `nodeshout.ShoutUsages`                                    |
+| `nodeshout.TlsModes`                     | `nodeshout.ShoutTlsModes`                                  |
+| `nodeshout.Blocking`                     | `nodeshout.ShoutBlocking`                                  |
+| `nodeshout.AudioInfoKeys`                | `nodeshout.ShoutAudioInfoKeys`                             |
+| `nodeshout.MetaKeys`                     | `nodeshout.ShoutMetaKeys`                                  |
+| class `ShoutT`                           | class `Shout`                                              |
+| class `MetadataT`                        | class `ShoutMetadata`                                      |
 
 `ShoutT` and `MetadataT` are kept as deprecated _type_ aliases for one release; the runtime classes have new names.
 
 ## Developing
 
-Tooling is pinned via [mise](https://mise.jdx.dev/) and [Yarn Berry](https://yarnpkg.com/):
+Tooling & dependencies are managed via [mise](https://mise.jdx.dev/) and [Yarn Berry](https://yarnpkg.com/):
 
 - `mise install` — installs node & yarn
-- `yarn install` — installs dependencies (`nodeLinker: node-modules`).
-- `mise run lint` — runs `lint:tsc`, `lint:oxlint`, and `lint:oxfmt` in parallel (or run any individually as `yarn lint:tsc`, etc.).
+- `yarn install` — installs npm dependencies
+- `mise run lint` — runs linters through yarn in parallel
 - `yarn test` — runs vitest unit tests (no server required).
 - `yarn build` — emits `dist/*.js` and `dist/*.d.ts`.
 - `yarn demos` — runs both demos against a local Icecast (start `icecast -c demos/icecast.xml` first).
