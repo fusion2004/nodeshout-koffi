@@ -34,7 +34,7 @@ yarn add @fusion2004/nodeshout-koffi
 
 ## Usage
 
-nodeshout is a **pure ESM** package. Import named exports:
+@fusion2004/nodeshout-koffi is a **pure ESM** package. Import named exports:
 
 ```ts
 import {
@@ -66,7 +66,7 @@ shout.setAudioInfo(ShoutAudioInfoKeys.SAMPLERATE, "44100");
 shout.setAudioInfo(ShoutAudioInfoKeys.CHANNELS, "2");
 ```
 
-Open the connection — and check the return code. Every method documented as "Callers should check this" returns `ShoutErrorTypes.SUCCESS` (`0`) on success or a negative `ShoutErrorTypes` value on failure. On failure, `shout.getError()` returns a human-readable message.
+Open the connection and check the return code. Every method documented as "Callers should check this" returns `ShoutErrorTypes.SUCCESS` (`0`) on success or a negative `ShoutErrorTypes` value on failure. On failure, `shout.getError()` returns a human-readable message.
 
 ```ts
 const status = shout.open();
@@ -76,7 +76,7 @@ if (status !== ShoutErrorTypes.SUCCESS) {
 }
 ```
 
-After successful connection, send audio file chunks via `shout.send` (also checked):
+After successful connection, send audio file chunks via `shout.send` (which you should also check for success):
 
 ```ts
 const sendStatus = shout.send(buffer, bytesRead);
@@ -98,7 +98,7 @@ yarn demo:blocking
 yarn demo:nonblocking
 ```
 
-(Both expect a local Icecast on `localhost:8000` with credentials `source:hackme` and a sample MP3 at `music/test.mp3`.)
+(Both expect a local Icecast on `localhost:8000` with credentials `source:hackme` which can be run via `icecast -c demos/icecast.xml`.)
 
 ## Constants
 
@@ -158,11 +158,11 @@ v3 is a hard break. Every consumer needs changes:
 
 ## Developing
 
-Tooling is pinned via [mise](https://mise.jdx.dev/) and [Yarn Berry](https://yarnpkg.com/):
+Tooling & dependencies are managed via [mise](https://mise.jdx.dev/) and [Yarn Berry](https://yarnpkg.com/):
 
 - `mise install` — installs node & yarn
-- `yarn install` — installs dependencies (`nodeLinker: node-modules`).
-- `mise run lint` — runs `lint:tsc`, `lint:oxlint`, and `lint:oxfmt` in parallel (or run any individually as `yarn lint:tsc`, etc.).
+- `yarn install` — installs npm dependencies
+- `mise run lint` — runs linters through yarn in parallel
 - `yarn test` — runs vitest unit tests (no server required).
 - `yarn build` — emits `dist/*.js` and `dist/*.d.ts`.
 - `yarn demos` — runs both demos against a local Icecast (start `icecast -c demos/icecast.xml` first).
