@@ -1,4 +1,6 @@
-# nodeshout
+[![NPM Version](https://img.shields.io/npm/v/%40fusion2004%2Fnodeshout-koffi)](https://www.npmjs.com/package/@fusion2004/nodeshout-koffi)
+
+# @fusion2004/nodeshout-koffi
 
 Native libshout bindings for Node.js.
 
@@ -23,11 +25,11 @@ brew install libshout
 sudo apt-get install libshout3
 ```
 
-Then add nodeshout:
+Then add this package to your application:
 
 ```sh
-yarn add nodeshout
-# or: npm i nodeshout
+yarn add @fusion2004/nodeshout-koffi
+# or: npm i @fusion2004/nodeshout-koffi
 ```
 
 ## Usage
@@ -44,7 +46,7 @@ import {
   ShoutFormats,
   ShoutUsages,
   ShoutAudioInfoKeys,
-} from "nodeshout";
+} from "@fusion2004/nodeshout-koffi";
 
 // Initialize
 shoutInit();
@@ -135,7 +137,7 @@ v3 is a hard break. Every consumer needs changes:
 
 | v2                                       | v3                                       |
 | ---------------------------------------- | ---------------------------------------- |
-| `const nodeshout = require('nodeshout')` | `import * as nodeshout from 'nodeshout'` |
+| `const nodeshout = require('nodeshout')` | `import * as nodeshout from '@fusion2004/nodeshout-koffi'` |
 | `nodeshout.init()`                       | `nodeshout.shoutInit()`                  |
 | `nodeshout.shutdown()`                   | `nodeshout.shoutShutdown()`              |
 | `nodeshout.getVersion()`                 | `nodeshout.shoutVersion()`               |
