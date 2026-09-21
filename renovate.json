@@ -1,6 +1,8 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:best-practices", "group:allNonMajor"],
+  "minimumReleaseAge": "3 days",
+  "rangeStrategy": "bump",
   "packageRules": [
     {
       "matchManagers": ["mise"],
@@ -17,6 +19,5 @@
       "matchPackageNames": ["*"],
       "rangeStrategy": "bump"
     }
-  ],
-  "rangeStrategy": "bump"
+  ]
 }
