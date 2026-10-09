@@ -49,16 +49,16 @@
     "prepack": "yarn clean && yarn build"
   },
   "dependencies": {
-    "koffi": "^3.3.1"
+    "koffi": "^3.3.2"
   },
   "devDependencies": {
-    "@types/node": "^22.20.4",
-    "oxfmt": "^0.70.0",
-    "oxlint": "^1.85.0",
+    "@types/node": "^22.20.5",
+    "oxfmt": "^0.72.0",
+    "oxlint": "^1.87.0",
     "tsx": "^4.23.15",
     "typescript": "^7.0.2",
-    "vite": "^8.3.1",
-    "vitest": "^5.0.2"
+    "vite": "^8.3.3",
+    "vitest": "^5.0.3"
   },
   "engines": {
     "node": ">=22.0.0"
