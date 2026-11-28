@@ -52,16 +52,16 @@
     "koffi": "^3.3.8"
   },
   "devDependencies": {
-    "@types/node": "^22.20.5",
-    "oxfmt": "^0.78.0",
-    "oxlint": "^1.93.0",
+    "@types/node": "^22.20.6",
+    "oxfmt": "^0.80.0",
+    "oxlint": "^1.95.0",
     "tsx": "^4.23.15",
     "typescript": "^7.0.2",
     "vite": "^8.3.8",
-    "vitest": "^5.1.0"
+    "vitest": "^5.1.1"
   },
   "engines": {
     "node": ">=22.0.0"
   },
-  "packageManager": "yarn@4.18.1"
+  "packageManager": "yarn@4.19.0"
 }
